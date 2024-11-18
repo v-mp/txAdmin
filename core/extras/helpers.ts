@@ -137,7 +137,7 @@ export const parsePlayerIds = (ids: string[]) => {
     let validIdsArray: string[] = [];
     const validIdsObject: PlayerIdsObjectType = {
         discord: null,
-        fivem: null,
+        vmp: null,
         license: null,
         license2: null,
         live: null,
@@ -238,7 +238,7 @@ export const getIdFromOauthNameid = (nameid: string) => {
     try {
         const res = /\/user\/(\d{1,8})/.exec(nameid);
         //@ts-expect-error
-        return `fivem:${res[1]}`;
+        return `vmp:${res[1]}`;
     } catch (error) {
         return false;
     }
