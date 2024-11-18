@@ -137,7 +137,7 @@ export const parsePlayerIds = (ids: string[]) => {
     let validIdsArray: string[] = [];
     const validIdsObject: PlayerIdsObjectType = {
         discord: null,
-        fivem: null,
+        vmp: null,
         license: null,
         license2: null,
         live: null,
@@ -214,7 +214,7 @@ export const parseLaxIdsArrayInput = (fullInput: string) => {
             }
         } else if (consts.validIdentifierParts.discord.test(input)) {
             validIds.push(`discord:${input}`);
-        } else if (consts.validIdentifierParts.fivem.test(input)) {
+        } else if (consts.validIdentifierParts.vmp.test(input)) {
             validIds.push(`fivem:${input}`);
         } else if (consts.validIdentifierParts.license.test(input)) {
             validIds.push(`license:${input}`);
@@ -236,9 +236,7 @@ export const parseLaxIdsArrayInput = (fullInput: string) => {
  */
 export const getIdFromOauthNameid = (nameid: string) => {
     try {
-        const res = /\/user\/(\d{1,8})/.exec(nameid);
-        //@ts-expect-error
-        return `fivem:${res[1]}`;
+        return `vmp:${nameid}`;
     } catch (error) {
         return false;
     }

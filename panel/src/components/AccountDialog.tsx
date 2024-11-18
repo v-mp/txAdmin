@@ -212,13 +212,13 @@ function ChangeIdentifiersTab() {
         if (!cfxreId) return;
         const trimmed = cfxreId.trim();
         if (/^\d+$/.test(trimmed)) {
-            setCfxreId(`fivem:${trimmed}`);
-        } else if (!trimmed.startsWith('fivem:')) {
+            setCfxreId(`vmp:${trimmed}`);
+        } else if (!trimmed.startsWith('vmp:')) {
             try {
                 setIsConvertingFivemId(true);
                 const forumData = await fetchWithTimeout(`https://forum.cfx.re/u/${trimmed}.json`);
                 if (forumData.user && typeof forumData.user.id === 'number') {
-                    setCfxreId(`fivem:${forumData.user.id}`);
+                    setCfxreId(`vmp:${forumData.user.id}`);
                 } else {
                     setError('Could not find the user in the forum. Make sure you typed the username correctly.');
                 }

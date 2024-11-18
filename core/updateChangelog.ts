@@ -73,34 +73,34 @@ export const queryChangelogApi = async () => {
 
     //Checking FXServer version
     let fxsUpdateData: UpdateDataType | undefined;
-    try {
-        if (txEnv.fxServerVersion < apiResponse.critical) {
-            if (apiResponse.critical > apiResponse.recommended) {
-                fxsUpdateData = {
-                    version: apiResponse.critical.toString(),
-                    isImportant: true,
-                }
-            } else {
-                fxsUpdateData = {
-                    version: apiResponse.recommended.toString(),
-                    isImportant: true,
-                }
-            }
-        } else if (txEnv.fxServerVersion < apiResponse.recommended) {
-            fxsUpdateData = {
-                version: apiResponse.recommended.toString(),
-                isImportant: true,
-            };
-        } else if (txEnv.fxServerVersion < apiResponse.optional) {
-            fxsUpdateData = {
-                version: apiResponse.optional.toString(),
-                isImportant: false,
-            };
-        }
-    } catch (error) {
-        console.warn('Error checking for FXServer updates.');
-        console.verbose.dir(error);
-    }
+    // try {
+    //     if (txEnv.fxServerVersion < apiResponse.critical) {
+    //         if (apiResponse.critical > apiResponse.recommended) {
+    //             fxsUpdateData = {
+    //                 version: apiResponse.critical.toString(),
+    //                 isImportant: true,
+    //             }
+    //         } else {
+    //             fxsUpdateData = {
+    //                 version: apiResponse.recommended.toString(),
+    //                 isImportant: true,
+    //             }
+    //         }
+    //     } else if (txEnv.fxServerVersion < apiResponse.recommended) {
+    //         fxsUpdateData = {
+    //             version: apiResponse.recommended.toString(),
+    //             isImportant: true,
+    //         };
+    //     } else if (txEnv.fxServerVersion < apiResponse.optional) {
+    //         fxsUpdateData = {
+    //             version: apiResponse.optional.toString(),
+    //             isImportant: false,
+    //         };
+    //     }
+    // } catch (error) {
+    //     console.warn('Error checking for FXServer updates.');
+    //     console.verbose.dir(error);
+    // }
 
     return {
         txa: txaUpdateData,
