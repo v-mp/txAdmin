@@ -83,9 +83,9 @@ async function handleAdd(ctx: AuthedCtx) {
     let citizenfxData: ProviderDataType | false = false;
     if (citizenfxID.length) {
         try {
-            if (consts.validIdentifiers.fivem.test(citizenfxID)) {
+            if (consts.validIdentifiers.vmp.test(citizenfxID)) {
                 const id = citizenfxID.split(':')[1];
-                const res = await got(`https://policy-live.fivem.net/api/getUserInfo/${id}`, cfxHttpReqOptions).json<any>();
+                const res = await got(`https://api.vmp.ir/other/forum.php?work=getUser&id=${id}`, cfxHttpReqOptions).json<any>();
                 if (!res.username || !res.username.length) {
                     return ctx.send({ type: 'danger', message: 'Invalid CitizenFX ID1' });
                 }
@@ -100,7 +100,7 @@ async function handleAdd(ctx: AuthedCtx) {
                 }
                 citizenfxData = {
                     id: citizenfxID,
-                    identifier: `fivem:${res.user.id}`,
+                    identifier: `vmp:${res.user.id}`,
                 };
             } else {
                 return ctx.send({ type: 'danger', message: 'Invalid CitizenFX ID3' });
@@ -188,9 +188,9 @@ async function handleEdit(ctx: AuthedCtx) {
     let citizenfxData: ProviderDataType | false = false;
     if (citizenfxID.length) {
         try {
-            if (consts.validIdentifiers.fivem.test(citizenfxID)) {
+            if (consts.validIdentifiers.vmp.test(citizenfxID)) {
                 const id = citizenfxID.split(':')[1];
-                const res = await got(`https://policy-live.fivem.net/api/getUserInfo/${id}`, cfxHttpReqOptions).json<any>();
+                const res = await got(`https://api.vmp.ir/other/forum.php?work=getUser&id=${id}`, cfxHttpReqOptions).json<any>();
                 if (!res.username || !res.username.length) {
                     return ctx.send({ type: 'danger', message: '(ERR1) Invalid CitizenFX ID' });
                 }
@@ -205,7 +205,7 @@ async function handleEdit(ctx: AuthedCtx) {
                 }
                 citizenfxData = {
                     id: citizenfxID,
-                    identifier: `fivem:${res.user.id}`,
+                    identifier: `vmp:${res.user.id}`,
                 };
             } else {
                 return ctx.send({ type: 'danger', message: '(ERR3) Invalid CitizenFX ID' });
@@ -264,11 +264,11 @@ async function handleEdit(ctx: AuthedCtx) {
     }
     const prevCfxId = admin.providers?.citizenfx?.identifier;
     if (!prevCfxId && citizenfxData) {
-        changes.push(`Added Cfx.re ID: ${citizenfxData.identifier}.`);
+        changes.push(`Added VMP ID: ${citizenfxData.identifier}.`);
     } else if (prevCfxId && !citizenfxData) {
-        changes.push(`Removed Cfx.re ID: ${prevCfxId}.`);
+        changes.push(`Removed VMP ID: ${prevCfxId}.`);
     } else if (prevCfxId && citizenfxData && prevCfxId !== citizenfxData.identifier) {
-        changes.push(`Changed Cfx.re ID from ${prevCfxId} to ${citizenfxData.identifier}.`);
+        changes.push(`Changed VMP ID from ${prevCfxId} to ${citizenfxData.identifier}.`);
     }
     const prevDiscordId = admin.providers?.discord?.identifier;
     if (!prevDiscordId && discordData) {

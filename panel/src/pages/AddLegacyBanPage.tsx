@@ -106,7 +106,7 @@ export default function AddLegacyBanPage() {
                         ref={idsTextareaRef}
                         className="h-full"
                         disabled={isSaving || !canBan}
-                        placeholder="discord:xxxx, fivem:xxxx, license:xxxx, steam:xxxx, etc..."
+                        placeholder="discord:xxxx, vmp:xxxx, license:xxxx, steam:xxxx, etc..."
                     />
                 </div>
                 <BanForm

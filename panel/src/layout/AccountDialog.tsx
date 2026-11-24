@@ -88,7 +88,7 @@ function ChangePasswordTab() {
                     Your account has a temporary password that needs to be changed before you can use this web panel. <br />
                     <strong>Make sure to take note of your new password before saving.</strong>
                 </p>) : (<p className="text-sm text-muted-foreground">
-                    You can use your password to login to the txAdmin inferface even without using the Cfx.re login button.
+                    You can use your password to login to the txAdmin inferface even without using the VMP login button.
                 </p>)}
                 <div className="space-y-3 pt-2 pb-6">
                     {!authData.isTempPassword && (
@@ -216,13 +216,13 @@ function ChangeIdentifiersTab() {
         if (!cfxreId) return;
         const trimmed = cfxreId.trim();
         if (/^\d+$/.test(trimmed)) {
-            setCfxreId(`fivem:${trimmed}`);
-        } else if (!trimmed.startsWith('fivem:')) {
+            setCfxreId(`vmp:${trimmed}`);
+        } else if (!trimmed.startsWith('vmp:')) {
             try {
                 setIsConvertingFivemId(true);
                 const forumData = await fetchWithTimeout(`https://forum.cfx.re/u/${trimmed}.json`);
                 if (forumData.user && typeof forumData.user.id === 'number') {
-                    setCfxreId(`fivem:${forumData.user.id}`);
+                    setCfxreId(`vmp:${forumData.user.id}`);
                 } else {
                     setError('Could not find the user in the forum. Make sure you typed the username correctly.');
                 }
@@ -260,7 +260,7 @@ function ChangeIdentifiersTab() {
                             autoCapitalize="none"
                             autoComplete="off"
                             autoCorrect="off"
-                            placeholder="fivem:000000"
+                            placeholder="vmp:000000"
                             value={currIdsResp.isLoading || isConvertingFivemId ? 'loading...' : cfxreId}
                             disabled={currIdsResp.isLoading || isConvertingFivemId}
                             autoFocus
@@ -273,7 +273,7 @@ function ChangeIdentifiersTab() {
                         <p className="text-sm text-muted-foreground">
                             Your identifier can be found by clicking in your name in the playerlist and going to the IDs page. <br />
                             You can also type in your <TxAnchor href="https://forum.cfx.re/">forum.cfx.re</TxAnchor> username and it will be converted automatically. <br />
-                            This is required if you want to login using the Cfx.re button.
+                            This is required if you want to login using the VMP button.
                         </p>
                     </div>
                     <div className="space-y-1">

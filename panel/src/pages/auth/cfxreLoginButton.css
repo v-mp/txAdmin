@@ -1,13 +1,13 @@
 .cfxrebtn {
-    border: solid 2px #f40552;
-    background: #f5dcee7d;
-    box-shadow: 0 0 5px 0 rgba(244, 5, 82, 0.75);
+    border: solid 2px #7f00ff;
+    background: #e9dcf57d;
+    box-shadow: 0 0 5px 0 rgba(127, 0, 255, 0.75);
 }
 .dark .cfxrebtn {
     background: #2e1828b2;
 }
 .cfxrebtn:hover {
-    background-color: #f40552;
+    background-color: #7f00ff;
 }
 .cfxrebtn:disabled {
     color: lightgray;

@@ -406,10 +406,10 @@ if (hostVars.DEFAULT_ACCOUNT) {
             ...errArr,
         ]);
     }
-    if (fivemId && !consts.validIdentifierParts.fivem.test(fivemId)) {
+    if (fivemId && !consts.validIdentifierParts.vmp.test(fivemId)) {
         fatalError.GlobalData(22, [
-            'Invalid default account FiveM ID.',
-            'It should match the number in the fivem:0000000 game identifier.',
+            'Invalid default account VMP ID.',
+            'It should match the number in the vmp:0000000 game identifier.',
             ...errArr,
         ]);
     }

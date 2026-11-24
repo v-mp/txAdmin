@@ -4,29 +4,29 @@ import { shortenId } from '@shared/utils';
 
 
 test('parsePlayerId', () => {
-    let result = idUtils.parsePlayerId('FIVEM:555555');
+    let result = idUtils.parsePlayerId('VMP:555555');
     expect(result.isIdValid).toBe(true);
-    expect(result.idType).toBe('fivem');
+    expect(result.idType).toBe('vmp');
     expect(result.idValue).toBe('555555');
-    expect(result.idlowerCased).toBe('fivem:555555');
+    expect(result.idlowerCased).toBe('vmp:555555');
 
-    result = idUtils.parsePlayerId('fivem:xxxxx');
+    result = idUtils.parsePlayerId('vmp:xxxxx');
     expect(result.isIdValid).toBe(false);
 });
 
 test('parsePlayerIds', () => {
-    const result = idUtils.parsePlayerIds(['fivem:555555', 'fivem:xxxxx']);
-    expect(result.validIdsArray).toEqual(['fivem:555555']);
-    expect(result.invalidIdsArray).toEqual(['fivem:xxxxx']);
-    expect(result.validIdsObject?.fivem).toBe('555555');
+    const result = idUtils.parsePlayerIds(['vmp:555555', 'vmp:xxxxx']);
+    expect(result.validIdsArray).toEqual(['vmp:555555']);
+    expect(result.invalidIdsArray).toEqual(['vmp:xxxxx']);
+    expect(result.validIdsObject?.vmp).toBe('555555');
 });
 
 test('filterPlayerHwids', () => {
     const result = idUtils.filterPlayerHwids([
-        '5:55555555000000002d267c6638c8873d55555555000000005555555500000000',
+        '2:55555555000000002d267c6638c8873d',
         'invalidHwid'
     ]);
-    expect(result.validHwidsArray).toEqual(['5:55555555000000002d267c6638c8873d55555555000000005555555500000000']);
+    expect(result.validHwidsArray).toEqual(['2:55555555000000002d267c6638c8873d']);
     expect(result.invalidHwidsArray).toEqual(['invalidHwid']);
 });
 
@@ -37,7 +37,7 @@ test('parseLaxIdsArrayInput', () => {
 });
 
 test('getIdFromOauthNameid', () => {
-    expect(idUtils.getIdFromOauthNameid('https://forum.cfx.re/internal/user/555555')).toBe('fivem:555555');
+    expect(idUtils.getIdFromOauthNameid('555555')).toBe('vmp:555555');
     expect(idUtils.getIdFromOauthNameid('xxxxx')).toBe(false);
 });
 

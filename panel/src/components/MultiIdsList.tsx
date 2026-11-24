@@ -33,7 +33,7 @@ const sortIds = (a: string, b: string) => {
 
 //Used in the compare prompt dialog
 const placeholderIds = [
-    'fivem:xxxxxxx',
+    'vmp:xxxxxxx',
     'license:xxxxxxxxxxxxxx',
     'discord:xxxxxxxxxxxxxxxxxx',
     'etc...',

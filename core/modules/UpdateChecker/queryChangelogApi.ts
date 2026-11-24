@@ -75,34 +75,7 @@ export const queryChangelogApi = async () => {
 
     //Checking FXServer version
     let fxsUpdateData: UpdateDataType | undefined;
-    try {
-        if (txEnv.fxsVersion < apiResponse.critical) {
-            if (apiResponse.critical > apiResponse.recommended) {
-                fxsUpdateData = {
-                    version: apiResponse.critical.toString(),
-                    isImportant: true,
-                }
-            } else {
-                fxsUpdateData = {
-                    version: apiResponse.recommended.toString(),
-                    isImportant: true,
-                }
-            }
-        } else if (txEnv.fxsVersion < apiResponse.recommended) {
-            fxsUpdateData = {
-                version: apiResponse.recommended.toString(),
-                isImportant: true,
-            };
-        } else if (txEnv.fxsVersion < apiResponse.optional) {
-            fxsUpdateData = {
-                version: apiResponse.optional.toString(),
-                isImportant: false,
-            };
-        }
-    } catch (error) {
-        console.warn('Error checking for FXServer updates.');
-        console.verbose.dir(error);
-    }
+    //VMP: the Cfx.re artifact versions don't apply to VMP server builds
 
     return {
         txa: txaUpdateData,

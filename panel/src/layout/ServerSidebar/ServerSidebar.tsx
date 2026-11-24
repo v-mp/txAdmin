@@ -47,7 +47,7 @@ export function ServerSidebar({ isSheet }: ServerSidebarProps) {
                     )}>
                         tx: <strong>v{window.txConsts.txaVersion}</strong>
                         &nbsp;|
-                        fx: <strong>b{window.txConsts.fxsVersion}</strong>
+                        VMP: <strong>b{window.txConsts.fxsVersion}</strong>
                     </span>
                 </div>
             ) : null}

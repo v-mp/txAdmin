@@ -89,7 +89,7 @@ export default function AuthShell() {
                 <div className="text-center text-muted-foreground text-sm font-light">
                     tx: <strong>v{window.txConsts.txaVersion}</strong>
                     &nbsp;|
-                    fx: <strong>b{window.txConsts.fxsVersion}</strong>
+                    VMP: <strong>b{window.txConsts.fxsVersion}</strong>
                 </div>
             </div>
         </div>

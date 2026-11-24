@@ -30,7 +30,7 @@ export const parsePlayerIds = (ids: string[]) => {
     let validIdsArray: string[] = [];
     const validIdsObject: PlayerIdsObjectType = {
         discord: null,
-        fivem: null,
+        vmp: null,
         license: null,
         license2: null,
         live: null,
@@ -107,8 +107,8 @@ export const parseLaxIdsArrayInput = (fullInput: string) => {
             }
         } else if (consts.validIdentifierParts.discord.test(input)) {
             validIds.push(`discord:${input}`);
-        } else if (consts.validIdentifierParts.fivem.test(input)) {
-            validIds.push(`fivem:${input}`);
+        } else if (consts.validIdentifierParts.vmp.test(input)) {
+            validIds.push(`vmp:${input}`);
         } else if (consts.validIdentifierParts.license.test(input)) {
             validIds.push(`license:${input}`);
         } else if (consts.validIdentifierParts.steam.test(input)) {
@@ -123,17 +123,10 @@ export const parseLaxIdsArrayInput = (fullInput: string) => {
 
 
 /**
- * Extracts the fivem:xxxxxx identifier from the nameid field from the userInfo oauth response.
- * Example: https://forum.cfx.re/internal/user/271816 -> fivem:271816
+ * Builds the vmp:xxxxxx identifier from the nameid field of sso.vmp.ir's userInfo response.
  */
 export const getIdFromOauthNameid = (nameid: string) => {
-    try {
-        const res = /\/user\/(\d{1,8})/.exec(nameid);
-        //@ts-expect-error
-        return `fivem:${res[1]}`;
-    } catch (error) {
-        return false;
-    }
+    return consts.validIdentifierParts.vmp.test(String(nameid)) ? `vmp:${nameid}` : false;
 }
 
 

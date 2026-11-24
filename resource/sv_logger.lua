@@ -10,7 +10,80 @@ if not TX_SERVER_MODE then return end
 local sub = string.sub
 local ostime = os.time
 local tonumber = tonumber
+local luaType = type
 local loggerBuffer = {}
+
+-- Limits for data that can come from a game client
+local MAX_STRING = 512
+local MAX_DEPTH = 3
+local MAX_ITEMS = 32
+local MAX_BUFFERED = 2000
+local WARN_INTERVAL = 30
+
+local lastWarning = {}
+local wasChanged = false
+
+
+--- Makes any value safe to serialize: no NaN/Infinity (invalid JSON, so the whole batch would be lost),
+--- no huge strings (they ended up in error messages and crashed old servers), no functions or userdata.
+local function sanitizeLogValue(value, depth)
+    local valueType = luaType(value)
+    if valueType == 'string' then
+        if #value > MAX_STRING then
+            wasChanged = true
+            return sub(value, 1, MAX_STRING)..'...'
+        end
+        return value
+    elseif valueType == 'number' then
+        if value ~= value or value == math.huge or value == -math.huge then
+            wasChanged = true
+            return 0
+        end
+        return value
+    elseif valueType == 'boolean' or valueType == 'nil' then
+        return value
+    elseif valueType == 'table' then
+        if depth >= MAX_DEPTH then
+            wasChanged = true
+            return '[table]'
+        end
+        local out, count = {}, 0
+        for k, v in pairs(value) do
+            count = count + 1
+            if count > MAX_ITEMS then
+                wasChanged = true
+                break
+            end
+            local keyType = luaType(k)
+            if keyType == 'string' then
+                if #k > MAX_STRING then
+                    wasChanged = true
+                    k = sub(k, 1, 64)..'...'
+                end
+                out[k] = sanitizeLogValue(v, depth + 1)
+            elseif keyType == 'number' and k == k and k ~= math.huge and k ~= -math.huge then
+                out[k] = sanitizeLogValue(v, depth + 1)
+            else
+                wasChanged = true
+            end
+        end
+        return out
+    end
+    wasChanged = true
+    return '['..valueType..']'
+end
+
+
+--- Prints who sent it, so whoever tries this can be found. At most once per player every 30 seconds.
+local function warnInvalidEvent(src, type)
+    if luaType(src) ~= 'number' or (lastWarning[src] or 0) + WARN_INTERVAL > ostime() then return end
+    lastWarning[src] = ostime()
+    print(('^1[txAdmin] Player #%d (%s) sent invalid or oversized data in a %s event.^0'):format(
+        src,
+        sub(GetPlayerName(src) or 'unknown', 1, 75),
+        type
+    ))
+end
 
 
 --- function logger
@@ -19,12 +92,25 @@ local loggerBuffer = {}
 ---@param type string the action type
 ---@param data table|nil the event data
 local function logger(src, type, data)
+    if src ~= 'tx' then
+        if luaType(src) ~= 'number' or src ~= src then return end
+        if #loggerBuffer >= MAX_BUFFERED then return end
+
+        wasChanged = false
+        data = sanitizeLogValue(data, 0)
+        if wasChanged then warnInvalidEvent(src, type) end
+    end
+
     loggerBuffer[#loggerBuffer+1] = {
         src = src,
         type = type,
         data = data or false
     }
 end
+
+AddEventHandler('playerDropped', function()
+    lastWarning[source] = nil
+end)
 
 
 -- send all of the buffered logs every second
@@ -42,13 +128,16 @@ CreateThread(function()
                 end
             end
 
-            --Sending logs via FD3 and resetting buffer
-            local payload = json.encode({
-                type = 'txAdminLogData',
-                logs = loggerBuffer
-            })
-            PrintStructuredTrace(payload)
+            --Sending logs via FD3 and resetting buffer (before encoding, an error must not stop this thread)
+            local logs = loggerBuffer
             loggerBuffer = {}
+            local success, payload = pcall(json.encode, {
+                type = 'txAdminLogData',
+                logs = logs
+            })
+            if success then
+                PrintStructuredTrace(payload)
+            end
         end
     end
 end)
@@ -220,6 +309,9 @@ end)
 
 -- Extra handlers
 RegisterNetEvent('txsv:logger:deathEvent', function(killer, cause)
+    if killer and luaType(killer) ~= 'number' or cause and luaType(cause) ~= 'string' then
+        return warnInvalidEvent(source, 'DeathNotice')
+    end
     local logData = {
         cause = cause,
         killer = killer
@@ -230,15 +322,25 @@ end)
 --FIXME: deprecate or allow server commands
 --FIXME: didn't migrate to keep compatibility with external calls
 RegisterNetEvent('txaLogger:CommandExecuted', function(data)
+    if luaType(data) ~= 'string' then return warnInvalidEvent(source, 'CommandExecuted') end
     logger(source, 'CommandExecuted', data)
 end)
 
 --FIXME: didn't migrate to keep compatibility with external calls
 RegisterNetEvent('txaLogger:DebugMessage', function(data)
+    if luaType(data) ~= 'string' then return warnInvalidEvent(source, 'DebugMessage') end
     logger(source, 'DebugMessage', data)
 end)
 
 local function logChatMessage(src, author, text)
+    -- when the event comes from a client all three arguments are the client's, even the source
+    local fromClient = luaType(source) == 'number'
+    if fromClient then src = source end
+    if author and luaType(author) ~= 'string' or text and luaType(text) ~= 'string' then
+        if fromClient then return warnInvalidEvent(source, 'ChatMessage') end
+        author = luaType(author) == 'string' and author or nil
+        text = luaType(text) == 'string' and text or nil
+    end
     local logData = {
         author = author,
         text = text

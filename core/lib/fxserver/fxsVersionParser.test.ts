@@ -17,6 +17,12 @@ test('normal versions', () => {
         branch: 'master',
         valid: true,
     });
+    expect(p('VMPServer-master SERVER v1.0.0.100443 win32')).toEqual({
+        build: 100443,
+        platform: 'windows',
+        branch: 'master',
+        valid: true,
+    });
     expect(p('FXServer-master v1.0.0.9956 linux')).toEqual({
         build: 9956,
         platform: 'linux',

@@ -23,9 +23,9 @@ const migrateProviderIdentifiers = (providerName, providerData) => {
         // data may be empty, or nameid may be invalid
         try {
             const res = /\/user\/(\d{1,8})/.exec(providerData.data.nameid);
-            providerData.identifier = `fivem:${res[1]}`;
+            providerData.identifier = `vmp:${res[1]}`;
         } catch (error) {
-            providerData.identifier = 'fivem:00000000';
+            providerData.identifier = 'vmp:00000000';
         }
     } else if (providerName === 'discord') {
         providerData.identifier = `discord:${providerData.id}`;
@@ -118,7 +118,7 @@ export default class AdminStore {
                 const { username, fivemId, password } = txHostConfig.defaults.account;
                 this.createAdminsFile(
                     username,
-                    fivemId ? `fivem:${fivemId}` : undefined,
+                    fivemId ? `vmp:${fivemId}` : undefined,
                     undefined,
                     password,
                     password ? false : undefined,
@@ -145,7 +145,7 @@ export default class AdminStore {
     /**
      * Creates a admins.json file based on the first account
      * @param {string} username
-     * @param {string|undefined} fivemId with the fivem: prefix
+     * @param {string|undefined} fivemId with the vmp: prefix
      * @param {string|undefined} discordId with the discord: prefix
      * @param {string|undefined} password backup password
      * @param {boolean|undefined} isPlainTextPassword

@@ -27,7 +27,7 @@ export default class PlayersDao {
      * Searches for a player in the database by the license, returns null if not found or false in case of error
      */
     findOne(license: string): DatabasePlayerType | null {
-        if (!/[0-9A-Fa-f]{40}/.test(license)) {
+        if (!/[0-9A-Fa-f]{18}/.test(license)) {
             throw new Error('Invalid reference type');
         }
 
